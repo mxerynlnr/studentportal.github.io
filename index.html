@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>QuestList — Student Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Exo+2:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+/* ================================================================
+   QUESTLIST — STUDENT PORTAL  |  student-questlist.css
+   ================================================================
+   TABLE OF CONTENTS
+   -----------------
+   01. CSS Variables (Design Tokens)
+   02. Reset & Base Styles
+   03. Starfield Background
+   04. Layout
+   05. Header
+   06. Player Card
+   07. Avatar & Profile Button
+   08. XP Bar & Stats
+   09. Tabs
+   10. Panels & Section Titles
+   11. Task Cards
+   12. Task Badges & Meta
+   13. Empty States
+   14. Buttons
+   15. QR Scanner
+   16. Rewards Panel
+   17. Modals
+   18. Profile Modal
+   19. Confetti & XP Float
+   20. Toast Notification
+   21. Scrollbar & Utilities
+   ================================================================ */
+
+
+/* ----------------------------------------------------------------
+   01. CSS VARIABLES
+   ---------------------------------------------------------------- */
+:root {
+  /* Backgrounds */
+  --bg:      #07071a;
+  --panel:   #10102a;
+  --card:    #161636;
+  --card2:   #1c1c42;
+
+  /* Borders */
+  --border:  #252550;
+  --border2: #34346a;
+
+  /* Brand — Purple */
+  --purple:  #6d28d9;
+  --purple2: #a855f7;
+  --purple3: #c084fc;
+  --glow:    rgba(109, 40, 217, 0.35);
+
+  /* Brand — Gold */
+  --gold:      #f59e0b;
+  --gold2:     #fbbf24;
+  --gold-glow: rgba(245, 158, 11, 0.35);
+
+  /* Status colours */
+  --green:  #10b981;
+  --green2: #34d399;
+  --red:    #ef4444;
+  --blue:   #60a5fa;
+
+  /* Text */
+  --text:   #e8e6f0;
+  --text2:  #b0aec8;
+  --muted:  #6b6890;
+  --muted2: #4a4870;
+
+  /* Border radii */
+  --r-sm: 8px;
+  --r-md: 13px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+
+  /* Global transition */
+  --t: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ----------------------------------------------------------------
+   02. RESET & BASE STYLES
+   ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+
+/* ----------------------------------------------------------------
+   03. STARFIELD BACKGROUND
+   ---------------------------------------------------------------- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -5%, rgba(109, 40, 217, 0.22), transparent),
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255, 255, 255, 0.55) 0%, transparent),
+    radial-gradient(1px   1px   at 82% 14%, rgba(255, 255, 255, 0.40) 0%, transparent),
+    radial-gradient(1.5px 1.5px at 44% 68%, rgba(255, 255, 255, 0.60) 0%, transparent),
+    radial-gradient(1px   1px   at 90% 42%, rgba(255, 255, 255, 0.35) 0%, transparent),
+    radial-gradient(1px   1px   at 22% 78%, rgba(255, 255, 255, 0.45) 0%, transparent),
+    radial-gradient(2px   2px   at 34% 38%, rgba(167, 139, 250, 0.40) 0%, transparent),
+    radial-gradient(2px   2px   at 74% 62%, rgba(168,  85, 247, 0.30) 0%, transparent),
+    radial-gradient(1.5px 1.5px at 67% 87%, rgba(255, 255, 255, 0.50) 0%, transparent),
+    radial-gradient(1px   1px   at 55% 12%, rgba(255, 255, 255, 0.30) 0%, transparent);
+}
+
+
+/* ----------------------------------------------------------------
+   04. LAYOUT
+   ---------------------------------------------------------------- */
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px 16px 90px;
+}
+
+
+/* ----------------------------------------------------------------
+   05. HEADER
+   ---------------------------------------------------------------- */
+.header {
+  text-align: center;
+  padding: 28px 0 14px;
+}
+
+.header::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin: 16px auto 0;
+  width: 55%;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+
+.header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: linear-gradient(100deg, #c084fc, #a855f7, #fbbf24, #a855f7, #c084fc);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleShimmer 6s linear infinite;
+}
+
+@keyframes titleShimmer {
+  0%   { background-position: 0%; }
+  100% { background-position: 300%; }
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 6px;
+  letter-spacing: 0.6px;
+}
+
+
+/* ----------------------------------------------------------------
+   06. PLAYER CARD
+   ---------------------------------------------------------------- */
+.player-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 20px 22px;
+  margin: 14px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(109, 40, 217, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Decorative glows in card corners */
+.player-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(109, 40, 217, 0.22), transparent 65%);
+  pointer-events: none;
+}
+
+.player-card::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; left: -50px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.10), transparent 65%);
+  pointer-events: none;
+}
+
+.player-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.player-info { flex: 1; min-width: 0; }
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.player-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.level-badge {
+  background: linear-gradient(90deg, var(--gold), #f97316);
+  color: #1a0900;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.07em;
+  box-shadow: 0 2px 10px var(--gold-glow);
+  white-space: nowrap;
+}
+
+.player-title {
+  font-size: 0.8rem;
+  color: var(--purple3);
+  margin-top: 4px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+
+/* ----------------------------------------------------------------
+   07. AVATAR & PROFILE BUTTON
+   ---------------------------------------------------------------- */
+.avatar {
+  position: relative;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(145deg, #2e1065, #6d28d9, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  border: 2px solid rgba(168, 85, 247, 0.55);
+  box-shadow: 0 0 22px var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--t), box-shadow var(--t);
+  user-select: none;
+}
+
+.avatar:hover {
+  transform: scale(1.09) rotate(-4deg);
+  box-shadow: 0 0 32px rgba(168, 85, 247, 0.65);
+}
+
+.avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Spinning rainbow ring around avatar */
+.avatar-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(#a855f7, #f59e0b, #34d399, #a855f7);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 3px));
+  mask:          radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 3px));
+  animation: spinRing 5s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes spinRing { to { transform: rotate(360deg); } }
+
+/* Pencil edit badge on avatar */
+.avatar-edit-hint {
+  position: absolute;
+  bottom: -2px; right: -2px;
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--gold), #f97316);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  border: 2px solid var(--panel);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* "Edit Profile" pill button under player name */
+.edit-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.40);
+  border-radius: 30px;
+  color: var(--purple3);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  font-family: inherit;
+  transition: all var(--t);
+}
+
+.edit-profile-btn:hover {
+  background: rgba(168, 85, 247, 0.28);
+  border-color: var(--purple2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--glow);
+}
+
+
+/* ----------------------------------------------------------------
+   08. XP BAR & STATS
+   ---------------------------------------------------------------- */
+.xp-section { margin-top: 18px; }
+
+.xp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  margin-bottom: 7px;
+}
+
+.xp-label { color: var(--purple3); font-weight: 700; letter-spacing: 0.04em; }
+.xp-nums  { color: var(--muted); }
+
+.xp-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  height: 13px;
+  border: 1px solid rgba(109, 40, 217, 0.25);
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #4c1d95, #7c3aed, #c084fc);
+  transition: width 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sweep */
+.xp-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shimmer 2.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { left: -60%; }
+  100% { left: 130%; }
+}
+
+.xp-hint {
+  font-size: 0.73rem;
+  color: var(--muted);
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* Mini stat boxes */
+.stats-row { display: flex; gap: 8px; margin-top: 16px; }
+
+.stat-box {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 6px;
+  text-align: center;
+  transition: border-color var(--t);
+}
+.stat-box:hover { border-color: rgba(109, 40, 217, 0.45); }
+
+.stat-num { font-size: 1.35rem; font-weight: 800; color: #fff; line-height: 1; }
+.stat-lbl { font-size: 0.64rem; color: var(--muted); margin-top: 4px; font-weight: 600; }
+
+
+/* ----------------------------------------------------------------
+   09. TABS
+   ---------------------------------------------------------------- */
+.tabs {
+  display: flex;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 4px;
+  gap: 4px;
+  margin: 0 0 18px;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 9px 4px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 0.79rem;
+  font-weight: 700;
+  color: var(--muted);
+  transition: all var(--t);
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+.tab.active { background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; box-shadow: 0 2px 16px var(--glow); }
+.tab:not(.active):hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
+
+
+/* ----------------------------------------------------------------
+   10. PANELS & SECTION TITLES
+   ---------------------------------------------------------------- */
+.panel        { display: none; }
+.panel.active { display: block; }
+
+.sec-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.82rem;
+  color: var(--purple3);
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Trailing horizontal rule */
+.sec-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border2), transparent);
+}
+
+
+/* ----------------------------------------------------------------
+   11. TASK CARDS
+   ---------------------------------------------------------------- */
+.task-list { display: flex; flex-direction: column; gap: 10px; }
+
+.task-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 16px 14px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.35s, border-color var(--t);
+}
+
+.task-card:hover { border-color: var(--border2); }
+
+/* Done state */
+.task-card.done                      { opacity: 0.5; }
+.task-card.done .task-name           { text-decoration: line-through; color: var(--muted); }
+.task-card.done .task-name-done-note { display: inline; }
+
+/* Left colour stripe by type */
+.task-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+.task-card.performance::before { background: linear-gradient(180deg, #a855f7, #6d28d9); }
+.task-card.activity::before    { background: linear-gradient(180deg, #60a5fa, #1d4ed8); }
+
+/* Deadline urgency glows */
+.task-card.deadline-warn { box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.35); }
+.task-card.deadline-late { box-shadow: inset 0 0 0 1px rgba(239,  68,  68, 0.40); }
+
+/* Completion checkbox */
+.check-btn {
+  width: 27px; height: 27px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: transparent;
+  transition: all var(--t);
+}
+.check-btn:hover { border-color: var(--green); background: rgba(16, 185, 129, 0.12); transform: scale(1.12); }
+.task-card.done .check-btn { background: var(--green); border-color: var(--green); color: #fff; }
+
+/* Task text */
+.task-body { flex: 1; min-width: 0; }
+
+.task-name {
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: var(--text);
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.task-name-done-note { display: none; font-size: 0.72rem; color: var(--green2); font-weight: 700; margin-left: 6px; }
+
+.task-meta { display: flex; gap: 7px; margin-top: 6px; align-items: center; flex-wrap: wrap; }
+
+.task-notes-box {
+  margin-top: 7px;
+  font-size: 0.79rem;
+  color: var(--text2);
+  line-height: 1.55;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 7px;
+  border-left: 3px solid var(--border2);
+}
+
+/* File attachment chips */
+.task-attach { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+
+.attach-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--purple3);
+  background: rgba(168, 85, 247, 0.10);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 7px;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: all var(--t);
+}
+.attach-btn:hover { background: rgba(168, 85, 247, 0.20); border-color: var(--purple2); }
+
+
+/* ----------------------------------------------------------------
+   12. TASK BADGES & META
+   ---------------------------------------------------------------- */
+.type-tag { font-size: 0.65rem; font-weight: 800; padding: 2px 9px; border-radius: 20px; text-transform: uppercase; }
+.type-tag.performance { background: rgba(168, 85, 247, 0.20); color: #c084fc; }
+.type-tag.activity    { background: rgba( 96, 165, 250, 0.20); color: #93c5fd; }
+
+.xp-badge { font-size: 0.72rem; color: var(--gold2); font-weight: 700; }
+
+.dl-badge { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.dl-ok    { background: rgba( 16, 185, 129, 0.15); color: var(--green2); }
+.dl-warn  { background: rgba(245, 158,  11, 0.18); color: var(--gold2); }
+.dl-late  { background: rgba(239,  68,  68, 0.15); color: #fca5a5; }
+
+.subject-tag  { font-size: 0.68rem; color: var(--muted); font-style: italic; }
+
+.approved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--green2);
+}
+
+
+/* ----------------------------------------------------------------
+   13. EMPTY STATES
+   ---------------------------------------------------------------- */
+.empty-state  { text-align: center; padding: 50px 20px; color: var(--muted); }
+.empty-icon   { font-size: 3.5rem; display: block; margin-bottom: 14px; opacity: 0.3; }
+.empty-title  { font-family: 'Cinzel Decorative', serif; font-size: 0.82rem; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.07em; }
+.empty-sub    { font-size: 0.82rem; line-height: 1.65; }
+.empty-sub strong { color: var(--purple3); }
+
+
+/* ----------------------------------------------------------------
+   14. BUTTONS
+   ---------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 11px 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all var(--t);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn:hover  { transform: translateY(-2px); }
+.btn:active { transform: none; }
+
+.btn-purple       { background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
+.btn-purple:hover { box-shadow: 0 6px 20px var(--glow); }
+
+.btn-gold         { background: linear-gradient(135deg, var(--gold), #f97316); color: #1a0900; }
+.btn-gold:hover   { box-shadow: 0 6px 20px var(--gold-glow); }
+
+.btn-ghost        { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
+.btn-ghost:hover  { border-color: var(--purple3); color: var(--purple3); box-shadow: none; transform: none; }
+
+.btn-green { background: linear-gradient(135deg, #065f46, var(--green)); color: #fff; }
+
+.btn-full { width: 100%; justify-content: center; }
+.btn-sm   { padding: 7px 14px; font-size: 0.78rem; border-radius: 8px; }
+.btn-row  { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Filter toggle (Done tab) */
+.filter-row { display: flex; gap: 8px; margin-bottom: 16px; background: var(--panel); padding: 4px; border-radius: var(--r-md); }
+
+.filter-btn { flex: 1; padding: 7px; border-radius: 9px; border: none; font-size: 0.79rem; font-weight: 700; cursor: pointer; transition: all var(--t); background: transparent; color: var(--muted); }
+.filter-btn.active { background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; box-shadow: 0 2px 12px var(--glow); }
+
+
+/* ----------------------------------------------------------------
+   15. QR SCANNER
+   ---------------------------------------------------------------- */
+.qr-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.qr-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--purple2), transparent);
+}
+
+.info-banner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(109, 40, 217, 0.10);
+  border: 1px solid rgba(109, 40, 217, 0.28);
+  border-radius: var(--r-sm);
+  padding: 11px 14px;
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+#video-wrap {
+  display: none;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #000;
+  position: relative;
+  margin-top: 14px;
+  border: 2px solid var(--border2);
+  transition: border-color 0.3s;
+}
+
+#video-wrap.detected { border-color: var(--green); animation: detectFlash 0.5s ease; }
+
+@keyframes detectFlash {
+  0%   { box-shadow: 0 0 0 0px  rgba(16, 185, 129, 0.8); }
+  70%  { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+  100% { box-shadow: none; }
+}
+
+#qr-video  { width: 100%; display: block; }
+#qr-canvas { display: none; }
+
+.scan-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+
+.scan-frame {
+  width: 220px; height: 220px;
+  border: 2px solid var(--purple2);
+  border-radius: 16px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  position: relative;
+  transition: border-color 0.3s;
+}
+.scan-frame.hit { border-color: var(--green); }
+
+/* Corner brackets */
+.corner { position: absolute; width: 24px; height: 24px; border-color: var(--purple3); border-style: solid; transition: border-color 0.3s; }
+.scan-frame.hit .corner { border-color: var(--green); }
+.tl { top: -2px;    left: -2px;   border-width: 3px 0 0 3px; border-radius: 5px 0 0 0; }
+.tr { top: -2px;    right: -2px;  border-width: 3px 3px 0 0; border-radius: 0 5px 0 0; }
+.bl { bottom: -2px; left: -2px;   border-width: 0 0 3px 3px; border-radius: 0 0 0 5px; }
+.br { bottom: -2px; right: -2px;  border-width: 0 3px 3px 0; border-radius: 0 0 5px 0; }
+
+.scan-beam {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--purple3), transparent);
+  animation: scanBeam 1.8s ease-in-out infinite;
+}
+@keyframes scanBeam { 0%, 100% { top: 4%; } 50% { top: 93%; } }
+
+.scan-status { text-align: center; font-size: 0.78rem; color: var(--muted); padding: 8px 0 0; font-weight: 600; letter-spacing: 0.03em; }
+
+/* Hidden — auto-process replaces two-step confirm flow */
+.qr-result { display: none !important; }
+
+.xp-legend { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.xp-legend h4 { font-weight: 700; font-size: 0.8rem; color: var(--text2); margin-bottom: 10px; }
+.xp-legend-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+
+.xp-tag { font-size: 0.73rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; }
+.xp-tag.performance { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
+.xp-tag.activity    { background: rgba( 96, 165, 250, 0.18); color: #93c5fd; }
+.xp-val { font-size: 0.8rem; font-weight: 800; color: var(--gold2); }
+
+
+/* ----------------------------------------------------------------
+   16. REWARDS PANEL
+   ---------------------------------------------------------------- */
+.rewards-intro {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.07), rgba(109, 40, 217, 0.07));
+  border: 1px solid rgba(245, 158, 11, 0.20);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  font-size: 0.84rem;
+  color: var(--text2);
+  line-height: 1.65;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.rewards-intro strong { color: var(--gold2); }
+
+.earned-reward {
+  border: 1px solid rgba(245, 158, 11, 0.40);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(251, 191, 36, 0.03));
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+  animation: fadeUp 0.4s ease;
+}
+.earned-reward-icon  { font-size: 2.2rem; width: 50px; text-align: center; flex-shrink: 0; }
+.earned-reward-info  { flex: 1; min-width: 0; }
+.earned-reward-name  { font-weight: 700; color: #fff; font-size: 0.95rem; }
+.earned-reward-sub   { font-size: 0.76rem; color: var(--muted); margin-top: 3px; }
+.earned-reward-badge { font-size: 0.70rem; font-weight: 800; padding: 3px 12px; border-radius: 20px; background: rgba(245, 158, 11, 0.20); color: var(--gold2); white-space: nowrap; }
+
+.no-rewards { text-align: center; padding: 36px 20px; color: var(--muted); font-size: 0.84rem; line-height: 1.6; }
+.no-rewards span { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.3; }
+
+.roadmap-row { display: flex; align-items: center; gap: 12px; border-radius: 10px; padding: 9px 13px; margin-bottom: 8px; font-size: 0.82rem; }
+.roadmap-row.done    { background: rgba(245, 158,  11, 0.07); border: 1px solid rgba(245, 158,  11, 0.22); }
+.roadmap-row.current { background: rgba(109,  40, 217, 0.10); border: 1px solid rgba(109,  40, 217, 0.35); box-shadow: 0 0 12px var(--glow); }
+.roadmap-row.future  { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); opacity: 0.5; }
+.roadmap-icon  { font-size: 1.1rem; width: 24px; text-align: center; flex-shrink: 0; }
+.roadmap-level { font-weight: 800; min-width: 58px; }
+.roadmap-row.done    .roadmap-level { color: var(--gold2); }
+.roadmap-row.current .roadmap-level { color: var(--purple3); }
+.roadmap-row.future  .roadmap-level { color: var(--muted); }
+.roadmap-xp          { flex: 1; color: var(--muted); }
+.roadmap-status      { font-size: 0.7rem; font-weight: 800; }
+.roadmap-row.done    .roadmap-status { color: var(--green2); }
+.roadmap-row.current .roadmap-status { color: var(--purple3); }
+
+
+/* ----------------------------------------------------------------
+   17. MODALS
+   ---------------------------------------------------------------- */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 5, 20, 0.85); backdrop-filter: blur(8px); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-xl);
+  padding: 30px 26px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--glow);
+}
+
+.modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--purple2), transparent); }
+
+@keyframes popIn {
+  from { transform: scale(0.6) translateY(24px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+}
+
+.modal-emoji { font-size: 3.8rem; display: block; margin-bottom: 12px; }
+
+.modal-title { font-family: 'Cinzel Decorative', serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; color: #fff; letter-spacing: 0.04em; }
+
+.gradient-text { background: linear-gradient(90deg, var(--purple3), var(--gold2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.modal-body        { color: var(--text2); font-size: 0.9rem; line-height: 1.7; margin-bottom: 18px; }
+.modal-body strong { color: #fff; }
+
+.modal-input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 600;
+  padding: 11px 14px;
+  outline: none;
+  margin-bottom: 14px;
+  transition: border-color var(--t);
+}
+.modal-input:focus        { border-color: var(--purple2); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2); }
+.modal-input::placeholder { color: var(--muted); }
+
+.highlight-text { color: var(--purple3); word-break: break-word; display: block; margin-top: 4px; }
+
+.modal-close-btn { position: absolute; top: 12px; right: 14px; background: rgba(255, 255, 255, 0.08); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: #fff; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background var(--t); }
+.modal-close-btn:hover { background: rgba(239, 68, 68, 0.30); }
+
+/* Reward picker */
+.reward-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; text-align: left; }
+.reward-option { background: var(--card); border: 2px solid var(--border); border-radius: var(--r-sm); padding: 12px; cursor: pointer; transition: all var(--t); position: relative; }
+.reward-option:hover    { border-color: var(--purple2); transform: translateY(-2px); }
+.reward-option.selected { border-color: var(--gold2); background: rgba(245, 158, 11, 0.10); box-shadow: 0 0 16px rgba(245, 158, 11, 0.20); }
+.reward-option-icon { font-size: 1.9rem; display: block; margin-bottom: 5px; }
+.reward-option-name { font-size: 0.78rem; font-weight: 800; color: #fff; line-height: 1.3; }
+.reward-option-desc { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+.reward-check { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; background: var(--gold2); border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 0.62rem; color: #000; font-weight: 900; }
+.reward-option.selected .reward-check { display: flex; }
+
+/* File view modal */
+.file-view-modal { max-width: 85vw; max-height: 88vh; overflow: auto; padding: 16px; text-align: left; }
+.file-view-modal img { max-width: 100%; border-radius: 10px; display: block; }
+
+/* QR task details */
+.qr-task-details { margin: -4px 0 14px; text-align: left; }
+.qr-task-details .notes-box { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.83rem; color: var(--text2); line-height: 1.55; margin-bottom: 10px; }
+
+
+/* ----------------------------------------------------------------
+   18. PROFILE MODAL
+   ---------------------------------------------------------------- */
+.profile-modal-inner { text-align: center; }
+
+.avatar-preview-wrap {
+  position: relative;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  margin: 0 auto 6px;
+  background: linear-gradient(145deg, #2e1065, #6d28d9, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.8rem;
+  border: 3px solid rgba(168, 85, 247, 0.55);
+  box-shadow: 0 0 0 6px rgba(109, 40, 217, 0.18), 0 0 30px var(--glow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow var(--t), transform var(--t);
+}
+.avatar-preview-wrap:hover { box-shadow: 0 0 0 8px rgba(168, 85, 247, 0.28), 0 0 40px rgba(168, 85, 247, 0.70); transform: scale(1.04); }
+.avatar-preview-wrap img   { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+.avatar-upload-label { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--purple3); font-weight: 700; letter-spacing: 0.04em; margin-bottom: 18px; cursor: pointer; }
+.avatar-upload-label:hover { color: var(--purple2); }
+
+.profile-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border2), transparent); margin: 16px 0; }
+
+.profile-actions     { display: flex; gap: 8px; margin-top: 12px; }
+.profile-actions .btn { flex: 1; justify-content: center; font-size: 0.82rem; padding: 10px; }
+
+
+/* ----------------------------------------------------------------
+   19. CONFETTI & XP FLOAT ANIMATIONS
+   ---------------------------------------------------------------- */
+#confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; }
+
+.cp { position: absolute; top: -5%; animation: cpFall linear forwards; border-radius: 3px; }
+
+@keyframes cpFall {
+  0%   { opacity: 1; transform: rotate(0deg)   translateX(0); }
+  100% { top: 110%; opacity: 0; transform: rotate(720deg) translateX(70px); }
+}
+
+.xp-float { position: fixed; pointer-events: none; z-index: 998; font-family: 'Exo 2', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--gold2); text-shadow: 0 0 14px var(--gold-glow); animation: xpUp 1.5s ease-out forwards; }
+
+@keyframes xpUp {
+  0%   { opacity: 1; transform: translateY(0)     scale(1); }
+  40%  { opacity: 1; transform: translateY(-40px)  scale(1.15); }
+  100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ----------------------------------------------------------------
+   20. TOAST NOTIFICATION
+   ---------------------------------------------------------------- */
+#toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(90px);
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 12px 24px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 800;
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  max-width: calc(100vw - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#toast.show { transform: translateX(-50%) translateY(0); }
+#toast.ok   { background: #065f46; }
+#toast.err  { background: #991b1b; }
+
+
+/* ----------------------------------------------------------------
+   21. SCROLLBAR & UTILITIES
+   ---------------------------------------------------------------- */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.mt-md { margin-top: 20px; }
+</style>
+</head>
+<body>
+<body>
+<div id="confetti-wrap"></div>
+<div id="toast"></div>
+
+<!-- ══ PROFILE MODAL ══ -->
+<div class="modal-overlay open" id="modal-name">
+  <div class="modal">
+    <span class="modal-emoji">🧙</span>
+    <h2 class="modal-title gradient-text">Welcome!</h2>
+    <p class="modal-body">Enter your name to begin your quest.<br/>Complete tasks from your teacher, earn XP, level up and choose your own rewards!</p>
+    <input class="modal-input" id="input-name" type="text" placeholder="Your name…" maxlength="28" onkeydown="if(event.key==='Enter') saveName()"/>
+    <button class="btn btn-purple btn-full" onclick="saveName()">✨ Begin Quest</button>
+  </div>
+</div>
+
+<!-- ══ EDIT PROFILE MODAL ══ -->
+<div class="modal-overlay" id="modal-profile">
+  <div class="modal" style="max-width:360px;">
+    <button class="modal-close-btn" onclick="closeModal('modal-profile')">✕</button>
+    <div class="profile-modal-inner">
+
+      <!-- Avatar preview — click to upload -->
+      <div class="avatar-preview-wrap" id="profile-preview-wrap" onclick="document.getElementById('profile-pic-input').click()" title="Tap to upload photo">
+        <span id="profile-preview-emoji" style="position:relative;z-index:1;">🧙</span>
+        <img id="profile-preview-img" src="" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
+        <!-- Camera overlay icon -->
+        <div id="profile-cam-overlay" style="position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;">
+          <span style="font-size:1.6rem;">📷</span>
+          <span style="font-size:.62rem;color:#fff;font-weight:700;margin-top:3px;">CHANGE</span>
+        </div>
+      </div>
+
+      <label class="avatar-upload-label" onclick="document.getElementById('profile-pic-input').click()">
+        📷 Upload Photo
+      </label>
+      <input type="file" id="profile-pic-input" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none" onchange="handleProfilePic(this)"/>
+
+      <div class="profile-divider"></div>
+
+      <label style="display:block;text-align:left;font-size:.75rem;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.04em;">YOUR NAME</label>
+      <input class="modal-input" id="profile-name-input" type="text" placeholder="Enter your name…" maxlength="28" style="margin-bottom:0;" onkeydown="if(event.key==='Enter') saveProfile()"/>
+
+      <div class="profile-actions">
+        <button class="btn btn-ghost" onclick="clearProfilePic()" id="btn-clear-pic" style="display:none;">🗑 Remove Photo</button>
+        <button class="btn btn-purple" onclick="saveProfile()">💾 Save Profile</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEVEL UP / REWARD MODAL ══ -->
+<div class="modal-overlay" id="modal-reward">
+  <div class="modal">
+    <span class="modal-emoji">🎉</span>
+    <h2 class="modal-title gradient-text">LEVEL UP!</h2>
+    <p class="modal-body">You reached <strong id="reward-level-txt"></strong>!<br/>Choose your reward — you earned it!</p>
+    <div class="reward-picker" id="reward-picker-grid"></div>
+    <button class="btn btn-gold btn-full" id="btn-claim" disabled onclick="claimReward()">🏆 Claim Reward</button>
+  </div>
+</div>
+
+<!-- ══ QR TASK CONFIRM MODAL ══ -->
+<div class="modal-overlay" id="modal-qr-confirm">
+  <div class="modal" style="max-width:440px;">
+    <button class="modal-close-btn" onclick="closeModal('modal-qr-confirm')">✕</button>
+    <span class="modal-emoji">📋</span>
+    <h2 class="modal-title" style="color:#fff;font-size:1.05rem;">New Task Received!</h2>
+    <p class="modal-body" style="margin-bottom:10px;">Task from your teacher:<br/><strong id="qr-confirm-title" class="highlight-text"></strong></p>
+    <div class="qr-task-details" id="qr-task-details"></div>
+    <div id="qr-files-section" style="display:none;margin-bottom:14px;background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.28);border-radius:10px;padding:12px;">
+      <div style="font-size:.77rem;font-weight:700;color:var(--purple3);margin-bottom:8px;">📎 Files — tap to download</div>
+      <div id="qr-files-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+    <p class="modal-body" style="font-size:.84rem;margin-bottom:14px;" id="qr-type-display"></p>
+    <button class="btn btn-purple btn-full" id="btn-add-quest" onclick="addScannedTask()">⚔️ Add to My Quests</button>
+    <button class="btn btn-ghost btn-full" style="margin-top:8px;" onclick="closeModal('modal-qr-confirm')">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ FILE VIEW MODAL ══ -->
+<div class="modal-overlay" id="modal-file">
+  <div class="modal file-view-modal">
+    <button class="modal-close-btn" onclick="closeModal('modal-file')">✕</button>
+    <div id="file-modal-content"></div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div class="app">
+
+  <header class="header">
+    <h1>⚔️ QuestList</h1>
+    <p class="tagline">classroom edition · earn xp · level up · choose rewards</p>
+  </header>
+
+  <!-- PLAYER CARD -->
+  <section class="player-card">
+    <div class="player-top">
+      <div class="avatar" onclick="openProfileModal()" title="Tap to edit profile">
+        <div class="avatar-ring"></div>
+        <span id="avatar-emoji">🧙</span>
+        <img id="avatar-img" src="" alt="" style="display:none;"/>
+        <div class="avatar-edit-hint">✏️</div>
+      </div>
+      <div class="player-info">
+        <div class="name-row">
+          <span class="player-name" id="player-name">Adventurer</span>
+          <span class="level-badge" id="level-badge">LVL 0</span>
+        </div>
+        <div class="player-title" id="player-title">Novice Scholar</div>
+        <button class="edit-profile-btn" onclick="openProfileModal()">✏️ Edit Profile</button>
+      </div>
+    </div>
+    <div class="xp-section">
+      <div class="xp-row">
+        <span class="xp-label">⚡ XP Progress</span>
+        <span class="xp-nums" id="xp-nums">0 / 50 XP</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+      <div class="xp-hint" id="xp-hint">50 XP to reach Level 1</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num" id="stat-active">0</div><div class="stat-lbl">📋 Active</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-done">0</div><div class="stat-lbl">✅ Done</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-xp">0</div><div class="stat-lbl">⚡ Total XP</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-rw">0</div><div class="stat-lbl">🏆 Rewards</div></div>
+    </div>
+  </section>
+
+  <!-- TABS — 4 tabs -->
+  <nav class="tabs">
+    <div class="tab active" onclick="switchTab('tasks',this)">📋 Tasks</div>
+    <div class="tab" onclick="switchTab('done',this)">✅ Done</div>
+    <div class="tab" onclick="switchTab('scanner',this)">📷 Scan</div>
+    <div class="tab" onclick="switchTab('rewards',this)">🏆 Rewards</div>
+  </nav>
+
+  <!-- ── TASKS PANEL ── -->
+  <section class="panel active" id="panel-tasks">
+    <h3 class="sec-title">⚔️ Active Quests</h3>
+    <div class="empty-state" id="empty-tasks">
+      <span class="empty-icon">🗺️</span>
+      <p class="empty-title">No Active Quests</p>
+      <p class="empty-sub">Your teacher will assign tasks via QR code.<br/>Go to <strong>📷 Scan</strong> tab to get your first quest!</p>
+    </div>
+    <div class="task-list" id="task-list-active"></div>
+  </section>
+
+  <!-- ── DONE PANEL ── -->
+  <section class="panel" id="panel-done">
+    <h3 class="sec-title">✅ Completed Quests</h3>
+    <div class="empty-state" id="empty-done">
+      <span class="empty-icon">🏅</span>
+      <p class="empty-title">Nothing Completed Yet</p>
+      <p class="empty-sub">Complete tasks to see them here and earn XP!</p>
+    </div>
+    <div class="task-list" id="task-list-done"></div>
+  </section>
+
+  <!-- ── SCANNER PANEL ── -->
+  <section class="panel" id="panel-scanner">
+    <div class="qr-card">
+      <h3 class="sec-title">📷 Scan Teacher QR</h3>
+      <div class="info-banner">
+        <span style="font-size:1.3rem;flex-shrink:0;">🧑‍🏫</span>
+        <span>Your teacher will show a QR code for each task. Scan it here to add it to your quest list and start earning XP!</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-purple" id="btn-start" onclick="startScan()">📷 Start Camera</button>
+        <button class="btn btn-ghost" id="btn-stop" onclick="stopScan()" style="display:none">⏹ Stop</button>
+      </div>
+      <div id="video-wrap">
+        <video id="qr-video" autoplay playsinline muted></video>
+        <div class="scan-overlay">
+          <div class="scan-frame" id="scan-frame">
+            <span class="corner tl"></span><span class="corner tr"></span>
+            <span class="corner bl"></span><span class="corner br"></span>
+            <div class="scan-beam"></div>
+          </div>
+        </div>
+      </div>
+      <canvas id="qr-canvas"></canvas>
+      <div class="scan-status" id="scan-status"></div>
+      <!-- kept in DOM but hidden via CSS — only used as fallback -->
+      <div class="qr-result" id="qr-result">
+        <p class="qr-result-label">✅ QR Detected!</p>
+        <p class="qr-result-text" id="qr-result-text"></p>
+        <p class="qr-result-note">Is this the correct task from your teacher?</p>
+        <div class="btn-row">
+          <button class="btn btn-green btn-sm" onclick="acceptScan()">✅ Yes, Add Quest</button>
+          <button class="btn btn-ghost btn-sm" onclick="rejectScan()">🔄 Scan Again</button>
+        </div>
+      </div>
+      <div class="xp-legend">
+        <h4>⚡ XP Values</h4>
+        <div class="xp-legend-row"><span class="xp-tag performance">⚡ Performance Task</span><span class="xp-val">+50 XP</span></div>
+        <div class="xp-legend-row"><span class="xp-tag activity">📝 Activity</span><span class="xp-val">+25 XP</span></div>
+      </div>
+
+      <!-- Manual QR code entry fallback -->
+      <div id="manual-entry-section" style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border);">
+        <h4 style="font-size:.8rem;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:.04em;">📋 Manual Entry (if camera unavailable)</h4>
+        <p style="font-size:.76rem;color:var(--muted);margin-bottom:10px;line-height:1.55;">Ask your teacher for the QR code text and paste it here:</p>
+        <div style="display:flex;gap:8px;">
+          <input
+            id="manual-qr-input"
+            type="text"
+            placeholder="Paste QR code text here…"
+            style="flex:1;background:var(--card);border:1px solid var(--border2);border-radius:var(--r-sm);color:#fff;font-size:.85rem;padding:9px 12px;outline:none;transition:border-color var(--t);"
+            onfocus="this.style.borderColor='var(--purple2)'"
+            onblur="this.style.borderColor='var(--border2)'"
+            onkeydown="if(event.key==='Enter') submitManualQR()"
+          />
+          <button class="btn btn-green btn-sm" onclick="submitManualQR()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REWARDS PANEL ── -->
+  <section class="panel" id="panel-rewards">
+    <div class="rewards-intro">
+      Every time you <strong>level up</strong>, pick <strong>one reward</strong> from a selection!<br/>
+      Show your teacher to claim it. 🎉
+    </div>
+    <h3 class="sec-title">🏆 Earned Rewards</h3>
+    <div id="rewards-list"></div>
+    <h3 class="sec-title mt-md">📊 XP Roadmap</h3>
+    <div id="xp-roadmap"></div>
+  </section>
+
+</div><!-- /.app -->
+
+<script>
+// ================================================================
+//  QUESTLIST — STUDENT PORTAL  |  student-questlist.js
+// ================================================================
+//  TABLE OF CONTENTS
+//  -----------------
+//  01. Constants & Configuration
+//  02. State Management (localStorage)
+//  03. Utility Functions
+//  04. Deadline Helpers
+//  05. Render — Main & Player Card
+//  06. Render — Task Cards
+//  07. Render — Rewards & Roadmap
+//  08. Task Completion (check-off)
+//  09. Level-Up & Reward Modal
+//  10. Profile Modal (name + photo upload)
+//  11. Name Entry (first-time welcome)
+//  12. Tab Switching
+//  13. QR Scanner (requestAnimationFrame-based)
+//  14. QR Processing & Task Import
+//  15. Scan Recording (for teacher tracker)
+//  16. Teacher Approval → XP Grant
+//  17. Keyboard & Init
+// ================================================================
+
+'use strict';
+
+
+// ----------------------------------------------------------------
+//  01. CONSTANTS & CONFIGURATION
+// ----------------------------------------------------------------
+
+const STATE_KEY = 'ql_student_v2';          // localStorage key for student data
+const SCAN_KEY  = 'ql_student_scans_v1';    // shared with teacher portal
+
+/** XP awarded per task type */
+const XP_MAP = {
+  performance: 50,
+  activity:    25,
+};
+
+/** Title displayed under the player's name per level */
+const TITLES = [
+  'Novice Scholar', 'Apprentice', 'Knowledge Seeker', 'Task Warrior',
+  'Rising Champion', 'Quest Master', 'Bronze Achiever', 'Silver Scholar',
+  'Gold Performer',  'Platinum Hero', 'Diamond Legend',  'Grandmaster',
+];
+
+/** XP needed to advance from a given level */
+function xpToAdvance(level) { return (level + 1) * 50; }
+
+/** Get the title string for a given level */
+function getTitle(level) { return TITLES[Math.min(level, TITLES.length - 1)]; }
+
+/** All possible rewards that appear in the level-up picker */
+const REWARD_POOL = [
+  { id: 'r01', icon: '🎮', name: 'Free Game Time',  desc: '15 min of free game time' },
+  { id: 'r02', icon: '🍫', name: 'Snack Pass',       desc: 'One snack of your choice' },
+  { id: 'r03', icon: '📚', name: 'Free Reading',     desc: '10 min free reading time' },
+  { id: 'r04', icon: '🎵', name: 'Music Pass',       desc: 'Listen to music while working' },
+  { id: 'r05', icon: '⭐', name: 'Gold Star',        desc: 'A gold star on the class board' },
+  { id: 'r06', icon: '💺', name: 'Seat Choice',      desc: 'Pick your seat for the day' },
+  { id: 'r07', icon: '📖', name: 'Skip Homework',    desc: 'Skip one homework assignment' },
+  { id: 'r08', icon: '🎨', name: 'Art Break',        desc: '10 min free drawing time' },
+  { id: 'r09', icon: '🏅', name: 'Helper Badge',     desc: 'Be the class helper today' },
+  { id: 'r10', icon: '🕹️', name: 'Extra Recess',     desc: '5 extra minutes of recess' },
+  { id: 'r11', icon: '📝', name: 'Sticker Pack',     desc: 'Choose a sticker pack' },
+  { id: 'r12', icon: '🧩', name: 'Puzzle Time',      desc: '10 min brain game' },
+  { id: 'r13', icon: '📢', name: 'Line Leader',      desc: 'Lead the class line today' },
+  { id: 'r14', icon: '🌟', name: 'Star Certificate', desc: 'Certificate of excellence' },
+  { id: 'r15', icon: '🎤', name: 'Show & Tell',      desc: 'Bring one item for show & tell' },
+  { id: 'r16', icon: '🏆', name: 'Trophy Display',   desc: 'Your name on the trophy board' },
+];
+
+/** Colours used for confetti pieces */
+const CP_COLORS = ['#a78bfa', '#f472b6', '#fbbf24', '#34d399', '#60a5fa', '#fb923c', '#f87171'];
+
+
+// ----------------------------------------------------------------
+//  02. STATE MANAGEMENT (localStorage)
+// ----------------------------------------------------------------
+
+/** Load state from localStorage or return a fresh default object */
+let state = (() => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(STATE_KEY));
+    if (stored) return stored;
+  } catch (_) {}
+  return {
+    name:          '',
+    level:         0,
+    currentXP:     0,
+    totalXP:       0,
+    tasks:         [],
+    nextId:        1,
+    earnedRewards: [],
+    pendingReward: false,
+    avatarUrl:     '',
+  };
+})();
+
+/** Persist state to localStorage */
+function save() {
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (_) {}
+}
+
+
+// ----------------------------------------------------------------
+//  03. UTILITY FUNCTIONS
+// ----------------------------------------------------------------
+
+/** Escape HTML special characters to prevent XSS */
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/** Show a temporary toast notification */
+let _toastTimer = null;
+function toast(msg, type = '', duration = 2800) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = 'show' + (type ? ' ' + type : '');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.className = '', duration);
+}
+
+/** Close a modal by removing the 'open' class */
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+/** Return an emoji icon for a file MIME type */
+function fileIcon(type) {
+  if (!type)                              return '📎';
+  if (type === 'application/pdf')         return '📄';
+  if (type.includes('word') || type.includes('docx')) return '📝';
+  if (type.startsWith('image/'))          return '🖼️';
+  return '📎';
+}
+
+/** Spawn animated confetti particles on level-up */
+function spawnConfetti() {
+  const container = document.getElementById('confetti-wrap');
+  container.innerHTML = '';
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'cp';
+    const size = 6 + Math.random() * 9;
+    piece.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${size}px;
+      height: ${size + Math.random() * 7}px;
+      background: ${CP_COLORS[i % CP_COLORS.length]};
+      animation-duration: ${1.5 + Math.random() * 2.5}s;
+      animation-delay: ${Math.random() * 0.7}s;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '3px'};
+    `;
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = '', 5500);
+}
+
+/** Show a floating "+50 XP" text near an element */
+function spawnXpFloat(text, targetEl) {
+  const rect = targetEl
+    ? targetEl.getBoundingClientRect()
+    : { left: window.innerWidth / 2 - 30, top: window.innerHeight / 2, width: 0 };
+
+  const float = document.createElement('div');
+  float.className = 'xp-float';
+  float.textContent = text;
+  float.style.left = (rect.left + rect.width / 2 - 30) + 'px';
+  float.style.top  = (rect.top + window.scrollY - 10) + 'px';
+  document.body.appendChild(float);
+  setTimeout(() => float.remove(), 1600);
+}
+
+
+// ----------------------------------------------------------------
+//  04. DEADLINE HELPERS
+// ----------------------------------------------------------------
+
+/**
+ * Return a CSS class name based on how close the deadline is:
+ *   'deadline-late' — already passed
+ *   'deadline-warn' — less than 24 hours away
+ *   ''              — plenty of time
+ */
+function deadlineClass(deadline) {
+  if (!deadline) return '';
+  const diff = new Date(deadline) - new Date();
+  if (diff < 0)          return 'deadline-late';
+  if (diff < 86400000)   return 'deadline-warn';
+  return '';
+}
+
+/** Return an HTML badge string for the deadline status */
+function deadlineBadge(deadline) {
+  if (!deadline) return '';
+  const diff = new Date(deadline) - new Date();
+  if (diff < 0) {
+    return `<span class="dl-badge dl-late">⚠ Past due</span>`;
+  }
+  const hours = diff / 3600000;
+  if (hours < 24) {
+    return `<span class="dl-badge dl-warn">⏰ ${Math.round(hours)}h left</span>`;
+  }
+  const days = Math.ceil(diff / 86400000);
+  return `<span class="dl-badge dl-ok">📅 ${days}d left</span>`;
+}
+
+/** Format a deadline ISO string into a short human-readable date */
+function fmtDeadline(deadline) {
+  if (!deadline) return '';
+  return new Date(deadline).toLocaleString('en-US', {
+    month:  'short',
+    day:    'numeric',
+    hour:   '2-digit',
+    minute: '2-digit',
+  });
+}
+
+
+// ----------------------------------------------------------------
+//  05. RENDER — MAIN & PLAYER CARD
+// ----------------------------------------------------------------
+
+/** Re-render the entire UI */
+function render() {
+  renderPlayer();
+  renderTasks();
+  renderRewards();
+}
+
+/** Update the player card (avatar, name, level, XP bar, stats) */
+function renderPlayer() {
+  document.getElementById('player-name').textContent  = state.name || 'Adventurer';
+  document.getElementById('level-badge').textContent  = 'LVL ' + state.level;
+  document.getElementById('player-title').textContent = getTitle(state.level);
+
+  const needed  = xpToAdvance(state.level);
+  const percent = Math.min(100, Math.round(state.currentXP / needed * 100));
+  document.getElementById('xp-fill').style.width    = percent + '%';
+  document.getElementById('xp-nums').textContent    = state.currentXP + ' / ' + needed + ' XP';
+  document.getElementById('xp-hint').textContent    = (needed - state.currentXP) + ' XP to reach Level ' + (state.level + 1);
+
+  const active = state.tasks.filter(t => !t.done).length;
+  const done   = state.tasks.filter(t =>  t.done).length;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-done').textContent   = done;
+  document.getElementById('stat-xp').textContent     = state.totalXP;
+  document.getElementById('stat-rw').textContent     = state.earnedRewards.length;
+
+  // Avatar — show photo if set, otherwise emoji
+  const avatarImg   = document.getElementById('avatar-img');
+  const avatarEmoji = document.getElementById('avatar-emoji');
+  if (state.avatarUrl) {
+    avatarImg.src          = state.avatarUrl;
+    avatarImg.style.display   = 'block';
+    avatarEmoji.style.display = 'none';
+  } else {
+    avatarImg.style.display   = 'none';
+    avatarEmoji.style.display = '';
+  }
+}
+
+
+// ----------------------------------------------------------------
+//  06. RENDER — TASK CARDS
+// ----------------------------------------------------------------
+
+/** Re-render both active and completed task lists */
+function renderTasks() {
+  const active = state.tasks.filter(t => !t.done);
+  const done   = state.tasks.filter(t =>  t.done);
+
+  // Active list
+  const activeList  = document.getElementById('task-list-active');
+  const emptyActive = document.getElementById('empty-tasks');
+  activeList.innerHTML = '';
+  emptyActive.style.display = active.length ? 'none' : 'block';
+  active.forEach(t => activeList.appendChild(buildTaskCard(t)));
+
+  // Done list (newest first)
+  const doneList  = document.getElementById('task-list-done');
+  const emptyDone = document.getElementById('empty-done');
+  doneList.innerHTML = '';
+  emptyDone.style.display = done.length ? 'none' : 'block';
+  [...done].reverse().forEach(t => doneList.appendChild(buildTaskCard(t)));
+}
+
+/** Build and return a single task card DOM element */
+function buildTaskCard(task) {
+  const scans     = loadScans();
+  const myScan    = scans.find(s => s.taskId === task.sourceTaskId && s.studentName === state.name);
+  const isApproved = myScan && myScan.approved;
+  const dlClass    = deadlineClass(task.deadline);
+
+  const card = document.createElement('div');
+  card.className = `task-card ${task.type}${task.done ? ' done' : ''}${dlClass ? ' ' + dlClass : ''}`;
+  card.dataset.id = task.id;
+
+  // File attachment buttons
+  let filesHtml = '';
+  if (task.files && task.files.length) {
+    filesHtml = `<div class="task-attach">
+      ${task.files.map((f, i) => `
+        <span class="attach-btn" onclick="viewTaskFile(${task.id}, ${i})">
+          ${fileIcon(f.type)} ${esc(f.name)}
+        </span>
+      `).join('')}
+    </div>`;
+  }
+
+  // XP status badge
+  let xpHtml = '';
+  if (!task.done) {
+    xpHtml = `<span class="xp-badge">+${XP_MAP[task.type] || 0} XP on approval</span>`;
+  } else if (task.submittedLate) {
+    xpHtml = `<span class="xp-badge" style="color: #fca5a5;">⚠ Late — -${XP_MAP[task.type] || 0} XP</span>`;
+  } else if (isApproved && task.xpAwarded) {
+    xpHtml = `<span class="xp-badge" style="color: var(--green2);">+${XP_MAP[task.type] || 0} XP ✓</span>`;
+  } else if (isApproved) {
+    xpHtml = `<span class="xp-badge" style="color: var(--green2);">+${XP_MAP[task.type] || 0} XP ✓</span>`;
+  } else {
+    xpHtml = `<span class="xp-badge" style="color: var(--muted);">⏳ Pending approval</span>`;
+  }
+
+  card.innerHTML = `
+    <div class="check-btn" data-id="${task.id}">${task.done ? '✓' : ''}</div>
+    <div class="task-body">
+      <div class="task-name">
+        ${esc(task.name)}
+        <span class="task-name-done-note">✓</span>
+      </div>
+      ${task.subject ? `<span class="subject-tag">📚 ${esc(task.subject)}</span>` : ''}
+      <div class="task-meta">
+        <span class="type-tag ${task.type}">
+          ${task.type === 'performance' ? '⚡ Performance' : '📝 Activity'}
+        </span>
+        ${xpHtml}
+        ${deadlineBadge(task.deadline)}
+        ${isApproved ? '<span class="approved-badge">✅ Teacher Approved</span>' : ''}
+        ${task.done && !isApproved ? '<span style="font-size: 0.67rem; color: var(--muted); font-weight: 600;">⏳ Waiting for teacher</span>' : ''}
+      </div>
+      ${task.notes   ? `<div class="task-notes-box">${esc(task.notes)}</div>` : ''}
+      ${task.deadline ? `<div style="font-size: 0.73rem; color: var(--muted); margin-top: 4px;">⏰ Due: ${fmtDeadline(task.deadline)}</div>` : ''}
+      ${filesHtml}
+    </div>
+  `;
+
+  return card;
+}
+
+/** Open a task file in the file-viewer modal */
+function viewTaskFile(taskId, fileIdx) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task || !task.files) return;
+  const file = task.files[fileIdx];
+  if (!file) return;
+
+  const content = document.getElementById('file-modal-content');
+
+  if (file.type && file.type.startsWith('image/')) {
+    content.innerHTML = `
+      <h3 style="margin-bottom: 12px; color: var(--purple3); font-family: 'Cinzel Decorative', serif; font-size: 0.9rem;">
+        ${esc(file.name)}
+      </h3>
+      <img src="${file.dataUrl}" alt="${esc(file.name)}" />
+    `;
+  } else if (file.type === 'application/pdf') {
+    content.innerHTML = `
+      <h3 style="margin-bottom: 12px; color: var(--purple3);">${esc(file.name)}</h3>
+      <iframe src="${file.dataUrl}" style="width: 100%; height: 65vh; border: none; border-radius: 10px;"></iframe>
+    `;
+  } else {
+    content.innerHTML = `
+      <h3 style="margin-bottom: 12px; color: var(--purple3);">${esc(file.name)}</h3>
+      <div style="text-align: center; padding: 30px;">
+        <div style="font-size: 3.5rem; margin-bottom: 12px;">📄</div>
+        <p style="color: var(--muted); margin-bottom: 16px;">Preview unavailable for this file type.</p>
+        <a href="${file.dataUrl}" download="${esc(file.name)}" class="btn btn-purple">⬇ Download</a>
+      </div>
+    `;
+  }
+
+  document.getElementById('modal-file').classList.add('open');
+}
+
+
+// ----------------------------------------------------------------
+//  07. RENDER — REWARDS & ROADMAP
+// ----------------------------------------------------------------
+
+/** Re-render the rewards tab (earned list + XP roadmap) */
+function renderRewards() {
+  // --- Earned rewards list ---
+  const list = document.getElementById('rewards-list');
+  list.innerHTML = '';
+
+  if (!state.earnedRewards.length) {
+    list.innerHTML = '<div class="no-rewards"><span>🏆</span>No rewards yet — complete tasks to level up!</div>';
+  } else {
+    [...state.earnedRewards].reverse().forEach(entry => {
+      const reward = REWARD_POOL.find(r => r.id === entry.rewardId);
+      if (!reward) return;
+      const div = document.createElement('div');
+      div.className = 'earned-reward';
+      div.innerHTML = `
+        <div class="earned-reward-icon">${reward.icon}</div>
+        <div class="earned-reward-info">
+          <div class="earned-reward-name">${reward.name}</div>
+          <div class="earned-reward-sub">Earned at Level ${entry.level} · ${reward.desc}</div>
+        </div>
+        <span class="earned-reward-badge">✅ LVL ${entry.level}</span>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  // --- XP Roadmap ---
+  const roadmap = document.getElementById('xp-roadmap');
+  roadmap.innerHTML = '';
+
+  const maxLevel = Math.max(9, state.level + 3);
+  for (let lv = 0; lv <= maxLevel; lv++) {
+    const needed = xpToAdvance(lv);
+    const status = state.level > lv ? 'done' : state.level === lv ? 'current' : 'future';
+    const icon   = status === 'done' ? '✅' : status === 'current' ? '⚡' : '🔒';
+    const label  = status === 'done' ? 'DONE' : status === 'current' ? 'IN PROGRESS' : '';
+
+    const row = document.createElement('div');
+    row.className = 'roadmap-row ' + status;
+    row.innerHTML = `
+      <span class="roadmap-icon">${icon}</span>
+      <span class="roadmap-level">Level ${lv}</span>
+      <span class="roadmap-xp">${needed} XP to advance</span>
+      <span class="roadmap-status">${label}</span>
+    `;
+    roadmap.appendChild(row);
+  }
+}
+
+
+// ----------------------------------------------------------------
+//  08. TASK COMPLETION (check-off)
+//  Marking a task done does NOT award XP.
+//  XP is only granted when the teacher approves in their portal.
+// ----------------------------------------------------------------
+
+document.addEventListener('click', e => {
+  const checkbox = e.target.closest('.check-btn');
+  if (!checkbox || !checkbox.dataset.id) return;
+
+  const id   = parseInt(checkbox.dataset.id);
+  const task = state.tasks.find(t => t.id === id);
+  if (!task || task.done) return;
+
+  task.done   = true;
+  task.doneAt = new Date().toISOString();
+
+  // Flag as late if submitted after the deadline
+  const isLate = task.deadline && new Date() > new Date(task.deadline);
+  if (isLate) task.submittedLate = true;
+
+  save();
+  render();
+
+  toast(
+    isLate
+      ? '⚠ Quest marked done (late submission) — wait for teacher approval'
+      : '📋 Quest marked done — wait for teacher to approve for XP!',
+    'ok',
+    3500
+  );
+});
+
+
+// ----------------------------------------------------------------
+//  09. LEVEL-UP & REWARD MODAL
+// ----------------------------------------------------------------
+
+/** Check if the current XP has crossed a level threshold */
+function checkLevelUp() {
+  const needed = xpToAdvance(state.level);
+  if (state.currentXP >= needed) {
+    state.currentXP -= needed;
+    state.level++;
+    state.pendingReward = true;
+    save();
+    spawnConfetti();
+    setTimeout(openRewardModal, 600);
+  }
+}
+
+/** Internal state for the reward picker */
+let _rewardOptions  = [];
+let _selectedReward = null;
+
+/** Open the level-up reward picker modal */
+function openRewardModal() {
+  const claimed = state.earnedRewards.map(r => r.rewardId);
+  const pool    = REWARD_POOL.filter(r => !claimed.includes(r.id));
+
+  _rewardOptions  = [...(pool.length >= 4 ? pool : REWARD_POOL)]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4);
+  _selectedReward = null;
+
+  document.getElementById('reward-level-txt').textContent = 'Level ' + state.level + '!';
+
+  const grid = document.getElementById('reward-picker-grid');
+  grid.innerHTML = '';
+  _rewardOptions.forEach(reward => {
+    const option = document.createElement('div');
+    option.className   = 'reward-option';
+    option.dataset.rid = reward.id;
+    option.innerHTML   = `
+      <span class="reward-option-icon">${reward.icon}</span>
+      <div class="reward-option-name">${reward.name}</div>
+      <div class="reward-option-desc">${reward.desc}</div>
+      <div class="reward-check">✓</div>
+    `;
+    option.addEventListener('click', () => {
+      _selectedReward = reward.id;
+      document.querySelectorAll('.reward-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.rid === reward.id);
+      });
+      document.getElementById('btn-claim').disabled = false;
+    });
+    grid.appendChild(option);
+  });
+
+  document.getElementById('btn-claim').disabled = true;
+  document.getElementById('modal-reward').classList.add('open');
+}
+
+/** Claim the selected reward */
+function claimReward() {
+  if (!_selectedReward) return;
+  const reward = REWARD_POOL.find(r => r.id === _selectedReward);
+  if (!reward) return;
+
+  state.earnedRewards.push({ level: state.level, rewardId: _selectedReward });
+  state.pendingReward = false;
+  save();
+  render();
+  closeModal('modal-reward');
+  toast('🎉 Reward: ' + reward.icon + ' ' + reward.name + '!', 'ok', 3200);
+}
+
+
+// ----------------------------------------------------------------
+//  10. PROFILE MODAL (name + photo upload)
+// ----------------------------------------------------------------
+
+/** Open the Edit Profile modal and pre-fill current values */
+function openProfileModal() {
+  document.getElementById('profile-name-input').value = state.name || '';
+
+  const previewImg   = document.getElementById('profile-preview-img');
+  const previewEmoji = document.getElementById('profile-preview-emoji');
+  const clearBtn     = document.getElementById('btn-clear-pic');
+
+  if (state.avatarUrl) {
+    previewImg.src           = state.avatarUrl;
+    previewImg.style.display   = 'block';
+    previewEmoji.style.display = 'none';
+    clearBtn.style.display     = '';
+  } else {
+    previewImg.style.display   = 'none';
+    previewEmoji.style.display = '';
+    clearBtn.style.display     = 'none';
+  }
+
+  window._pendingAvatar = null;
+  document.getElementById('profile-pic-input').value = '';
+  document.getElementById('modal-profile').classList.add('open');
+  setTimeout(() => document.getElementById('profile-name-input').focus(), 150);
+}
+
+/** Handle file selection from the profile picture input */
+function handleProfilePic(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    toast('⚠ Image too large — max 5 MB.', 'err');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const url = e.target.result;
+    document.getElementById('profile-preview-img').src           = url;
+    document.getElementById('profile-preview-img').style.display   = 'block';
+    document.getElementById('profile-preview-emoji').style.display  = 'none';
+    document.getElementById('btn-clear-pic').style.display          = '';
+    window._pendingAvatar = url;
+    toast('📷 Photo selected — tap Save to apply!', 'ok');
+  };
+  reader.readAsDataURL(file);
+}
+
+/** Remove the profile picture (staged — applied on Save) */
+function clearProfilePic() {
+  window._pendingAvatar = '__clear__';
+  document.getElementById('profile-preview-img').style.display   = 'none';
+  document.getElementById('profile-preview-emoji').style.display  = '';
+  document.getElementById('btn-clear-pic').style.display          = 'none';
+  document.getElementById('profile-pic-input').value              = '';
+}
+
+/** Save name and/or photo changes */
+function saveProfile() {
+  const name = document.getElementById('profile-name-input').value.trim();
+  if (!name) { toast('⚠ Please enter your name.', 'err'); return; }
+
+  state.name = name;
+
+  if (window._pendingAvatar === '__clear__') {
+    state.avatarUrl = '';
+  } else if (window._pendingAvatar) {
+    state.avatarUrl = window._pendingAvatar;
+  }
+  window._pendingAvatar = null;
+
+  save();
+  render();
+  closeModal('modal-profile');
+  toast('✅ Profile saved!', 'ok');
+}
+
+
+// ----------------------------------------------------------------
+//  11. NAME ENTRY (first-time welcome modal)
+// ----------------------------------------------------------------
+
+/** Open the welcome / name entry modal */
+function openNameModal() {
+  document.getElementById('input-name').value = state.name || '';
+  document.getElementById('modal-name').classList.add('open');
+  setTimeout(() => document.getElementById('input-name').focus(), 120);
+}
+
+/** Save the name from the welcome modal */
+function saveName() {
+  const name = document.getElementById('input-name').value.trim();
+  if (name) { state.name = name; save(); render(); }
+  closeModal('modal-name');
+}
+
+
+// ----------------------------------------------------------------
+//  12. TAB SWITCHING
+// ----------------------------------------------------------------
+
+/**
+ * Switch the active tab and panel.
+ * Also stops the QR scanner when leaving the scanner tab.
+ */
+function switchTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  if (name !== 'scanner') stopScan();
+}
+
+
+// ----------------------------------------------------------------
+//  13. QR SCANNER (requestAnimationFrame-based)
+// ----------------------------------------------------------------
+
+let _scanning = false;   // true while the RAF loop is running
+let _stream   = null;    // active MediaStream
+let _rafId    = null;    // requestAnimationFrame handle
+let _lastQR   = '';      // last decoded string (prevents double-fire)
+let _done     = false;   // flipped to true the moment a code is found
+let _cvs      = null;    // offscreen canvas for decoding
+let _ctx      = null;    // 2D context for the offscreen canvas
+
+/** Update the status text shown below the camera */
+function setScanStatus(msg) {
+  const el = document.getElementById('scan-status');
+  if (el) el.textContent = msg;
+}
+
+/** Start the camera and begin the RAF scan loop */
+async function startScan() {
+  if (_scanning) return;
+
+  setScanStatus('📷 Starting camera…');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setScanStatus('');
+    toast('🚫 Camera not supported on this browser.', 'err', 4000);
+    return;
+  }
+
+  try {
+    // Prefer rear camera on mobile, fall back to any camera
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+      });
+    } catch (_) {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    }
+
+    _stream   = stream;
+    _lastQR   = '';
+    _done     = false;
+
+    // Single offscreen canvas — reused every frame
+    _cvs = document.createElement('canvas');
+    _ctx = _cvs.getContext('2d');
+
+    const video = document.getElementById('qr-video');
+    video.srcObject = stream;
+    video.setAttribute('playsinline', '');
+    video.muted = true;
+
+    // Wait until the first frame is available before decoding
+    await new Promise(resolve => {
+      video.oncanplay = resolve;
+      setTimeout(resolve, 4000); // safety bail-out
+    });
+    await video.play().catch(() => {});
+
+    document.getElementById('video-wrap').style.display = 'block';
+    document.getElementById('btn-start').style.display  = 'none';
+    document.getElementById('btn-stop').style.display   = 'inline-flex';
+
+    _scanning = true;
+    setScanStatus('🔍 Point at QR code…');
+    requestAnimationFrame(rafScan);
+
+  } catch (err) {
+    _scanning = false;
+    setScanStatus('');
+    if      (err.name === 'NotAllowedError') toast('🚫 Camera permission denied — please allow camera access.', 'err', 5000);
+    else if (err.name === 'NotFoundError')   toast('📷 No camera found on this device.', 'err', 4000);
+    else                                     toast('📷 Camera error: ' + err.message, 'err', 4000);
+  }
+}
+
+/** RAF loop — decodes one frame per animation frame */
+function rafScan() {
+  if (!_scanning || _done) return; // bail immediately if stopped or already found
+
+  const video = document.getElementById('qr-video');
+  if (!video) { _scanning = false; return; }
+
+  // Only decode when the video has actual pixel data
+  if (video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0) {
+    _cvs.width  = video.videoWidth;
+    _cvs.height = video.videoHeight;
+    _ctx.drawImage(video, 0, 0);
+
+    try {
+      const imageData = _ctx.getImageData(0, 0, _cvs.width, _cvs.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'attemptBoth',
+      });
+
+      if (code && code.data && code.data !== _lastQR) {
+        _lastQR   = code.data;
+        _done     = true;
+        _scanning = false;
+
+        // Green flash to signal success
+        document.getElementById('video-wrap').classList.add('detected');
+        document.getElementById('scan-frame').classList.add('hit');
+        setScanStatus('✅ Got it!');
+
+        setTimeout(() => processQR(code.data), 250);
+        return; // don't schedule the next frame
+      }
+    } catch (_) {}
+  }
+
+  _rafId = requestAnimationFrame(rafScan);
+}
+
+/** Stop the camera and clean up */
+function stopScan() {
+  _scanning = false;
+  _done     = false;
+  if (_rafId) { cancelAnimationFrame(_rafId); _rafId = null; }
+  if (_stream) { _stream.getTracks().forEach(t => t.stop()); _stream = null; }
+
+  const video = document.getElementById('qr-video');
+  if (video) video.srcObject = null;
+
+  const videoWrap = document.getElementById('video-wrap');
+  if (videoWrap) { videoWrap.style.display = 'none'; videoWrap.classList.remove('detected'); }
+
+  const frame = document.getElementById('scan-frame');
+  if (frame) frame.classList.remove('hit');
+
+  document.getElementById('btn-start').style.display = 'inline-flex';
+  document.getElementById('btn-stop').style.display  = 'none';
+  setScanStatus('');
+}
+
+// Legacy stubs — kept so old HTML onclick attributes don't throw errors
+function acceptScan() { if (_lastQR) processQR(_lastQR); }
+function rejectScan() {
+  document.getElementById('video-wrap').classList.remove('detected');
+  document.getElementById('scan-frame').classList.remove('hit');
+  _lastQR = ''; _done = false; _scanning = true;
+  setScanStatus('🔍 Point at QR code…');
+  requestAnimationFrame(rafScan);
+}
+
+/** Submit QR text pasted manually in the fallback input */
+function submitManualQR() {
+  const input = document.getElementById('manual-qr-input');
+  const raw   = (input.value || '').trim();
+  if (!raw) { toast('⚠ Paste the QR code text first.', 'err'); return; }
+  input.value = '';
+  stopScan();
+  processQR(raw);
+}
+
+
+// ----------------------------------------------------------------
+//  14. QR PROCESSING & TASK IMPORT
+// ----------------------------------------------------------------
+
+let _pendingQR  = null; // parsed QR payload waiting to be added
+let _autoType   = null; // task type auto-detected from QR
+
+/**
+ * Process a decoded QR string.
+ * If it's a valid teacher task, open the confirm modal.
+ * If not, resume scanning with an error hint.
+ */
+function processQR(raw) {
+  let parsed = null;
+  try { parsed = JSON.parse(raw); } catch (_) {}
+
+  if (parsed && (parsed.v === 1 || parsed.v === 2) && parsed.title) {
+    // ── Valid teacher task QR ──
+    recordScan(parsed);
+
+    document.getElementById('qr-confirm-title').textContent = parsed.title;
+
+    // Populate task details section
+    const details = document.getElementById('qr-task-details');
+    details.innerHTML = '';
+
+    if (parsed.notes) {
+      const nb = document.createElement('div');
+      nb.className   = 'notes-box';
+      nb.textContent = parsed.notes;
+      details.appendChild(nb);
+    }
+    if (parsed.subject) {
+      const sb = document.createElement('div');
+      sb.style.cssText = 'font-size: 0.76rem; color: var(--muted); margin-bottom: 8px;';
+      sb.textContent   = '📚 ' + parsed.subject;
+      details.appendChild(sb);
+    }
+    if (parsed.deadline) {
+      const db = document.createElement('div');
+      db.style.cssText = 'font-size: 0.76rem; color: var(--gold2); margin-bottom: 8px;';
+      db.textContent   = '⏰ Due: ' + fmtDeadline(parsed.deadline);
+      details.appendChild(db);
+    }
+
+    _pendingQR = parsed;
+    _autoType  = parsed.type || null;
+
+    // Type & XP badge
+    const typeDisplay = document.getElementById('qr-type-display');
+    if (parsed.type) {
+      const xp  = XP_MAP[parsed.type] || 0;
+      const col = parsed.type === 'performance' ? '#c084fc' : '#93c5fd';
+      const lbl = parsed.type === 'performance' ? '⚡ Performance Task' : '📝 Activity';
+      typeDisplay.innerHTML = `Type: <strong style="color: ${col};">${lbl}</strong> &nbsp;·&nbsp; <span style="color: var(--gold2);">+${xp} XP</span> on teacher approval`;
+    } else {
+      typeDisplay.textContent = '';
+    }
+
+    // Fetch file attachments from teacher's localStorage and auto-download
+    const teacherTasks = loadTeacherTasks();
+    const source       = teacherTasks.find(t => t.id === parsed.id);
+    const filesSec     = document.getElementById('qr-files-section');
+    const filesList    = document.getElementById('qr-files-list');
+    filesList.innerHTML = '';
+
+    if (source && source.files && source.files.length) {
+      filesSec.style.display = 'block';
+      source.files.forEach((f, i) => {
+        // Download link chip
+        const a = document.createElement('a');
+        a.href      = f.dataUrl;
+        a.download  = f.name;
+        a.style.cssText = `
+          display: inline-flex; align-items: center; gap: 5px;
+          font-size: 0.73rem; font-weight: 600; color: var(--purple3);
+          background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35);
+          border-radius: 7px; padding: 5px 11px; text-decoration: none; margin-bottom: 2px;
+        `;
+        a.innerHTML = `${fileIcon(f.type)} ${esc(f.name)} ⬇`;
+        filesList.appendChild(a);
+
+        // Auto-trigger download for every file
+        setTimeout(() => {
+          const dl = document.createElement('a');
+          dl.href     = f.dataUrl;
+          dl.download = f.name;
+          document.body.appendChild(dl);
+          dl.click();
+          dl.remove();
+        }, 500 + i * 300);
+      });
+      toast('⬇ Downloading ' + source.files.length + ' file(s)…', 'ok');
+    } else {
+      filesSec.style.display = 'none';
+    }
+
+    stopScan();
+    document.getElementById('modal-qr-confirm').classList.add('open');
+
+  } else {
+    // ── Not a teacher task QR — resume scanning ──
+    setScanStatus('⚠ Not a task QR — keep scanning…');
+    _done     = false;
+    _scanning = true;
+    document.getElementById('video-wrap').classList.remove('detected');
+    document.getElementById('scan-frame').classList.remove('hit');
+    setTimeout(() => {
+      setScanStatus('🔍 Point at QR code…');
+      _rafId = requestAnimationFrame(rafScan);
+    }, 1200);
+  }
+}
+
+/** Add the scanned task to the student's quest list */
+function addScannedTask() {
+  if (!_pendingQR) return;
+
+  const p    = _pendingQR;
+  const type = p.type || _autoType || 'activity';
+
+  // Prevent duplicates
+  if (p.id && state.tasks.some(t => t.sourceTaskId === p.id)) {
+    toast('⚠ This task is already in your quest list!', 'err');
+    closeModal('modal-qr-confirm');
+    _pendingQR = null; _autoType = null;
+    return;
+  }
+
+  const teacherTasks = loadTeacherTasks();
+  const source       = teacherTasks.find(t => t.id === p.id) || null;
+
+  state.tasks.push({
+    id:           state.nextId++,
+    name:         p.title,
+    type:         type,
+    subject:      p.subject  || '',
+    notes:        p.notes    || '',
+    deadline:     p.deadline || null,
+    files:        source && source.files ? source.files : [],
+    sourceTaskId: p.id || null,
+    done:         false,
+    doneAt:       null,
+    submittedLate: false,
+    xpAwarded:    false,
+    addedAt:      new Date().toISOString(),
+  });
+
+  _pendingQR = null; _autoType = null;
+  closeModal('modal-qr-confirm');
+  save(); render();
+  switchTab('tasks', document.querySelector('.tab'));
+  toast('⚔️ Quest added! Complete it and submit to your teacher for XP!', 'ok', 3200);
+}
+
+
+// ----------------------------------------------------------------
+//  15. SCAN RECORDING (shared storage for teacher tracker)
+// ----------------------------------------------------------------
+
+/** Load all scan records from localStorage */
+function loadScans() {
+  try { return JSON.parse(localStorage.getItem(SCAN_KEY)) || []; } catch (_) { return []; }
+}
+
+/** Load the teacher's task list from localStorage */
+function loadTeacherTasks() {
+  try { return JSON.parse(localStorage.getItem('ql_teacher_tasks_v2')) || []; } catch (_) { return []; }
+}
+
+/**
+ * Record a new scan entry in shared localStorage so the teacher
+ * can see which students have scanned a given task.
+ */
+function recordScan(payload) {
+  if (!payload.id || !state.name) return;
+
+  const scans = loadScans();
+  // Avoid duplicates for the same student + task combination
+  if (scans.some(s => s.taskId === payload.id && s.studentName === state.name)) return;
+
+  scans.push({
+    id:          'scan_' + Date.now(),
+    taskId:      payload.id,
+    studentName: state.name,
+    scannedAt:   new Date().toISOString(),
+    approved:    false,
+    xpApplied:   false,
+  });
+
+  try { localStorage.setItem(SCAN_KEY, JSON.stringify(scans)); } catch (_) {}
+}
+
+
+// ----------------------------------------------------------------
+//  16. TEACHER APPROVAL → XP GRANT
+//  Called on page load and whenever the teacher approves a task
+//  in their portal (detected via the 'storage' event).
+// ----------------------------------------------------------------
+
+function applyTeacherApprovals() {
+  const scans = loadScans();
+  let changed = false;
+
+  scans.forEach(scan => {
+    // Only process approvals for this student that haven't been applied yet
+    if (!scan.approved || scan.xpApplied || scan.studentName !== state.name) return;
+
+    const task = state.tasks.find(t => t.sourceTaskId === scan.taskId);
+    if (!task) return;
+
+    const baseXP = XP_MAP[task.type] || 0;
+
+    if (task.submittedLate) {
+      // Deduct XP for a late submission
+      state.currentXP = Math.max(0, state.currentXP - baseXP);
+      state.totalXP   = Math.max(0, state.totalXP   - baseXP);
+      spawnXpFloat('-' + baseXP + ' XP ⚠', null);
+      toast('⚠ Late submission: -' + baseXP + ' XP deducted', 'err', 3500);
+    } else {
+      // Award XP for an on-time approved task
+      state.currentXP  += baseXP;
+      state.totalXP    += baseXP;
+      task.xpAwarded    = true;
+      spawnXpFloat('+' + baseXP + ' XP ⚡', null);
+      checkLevelUp();
+      toast('✅ Teacher approved! +' + baseXP + ' XP earned!', 'ok', 3200);
+    }
+
+    scan.xpApplied = true;
+    task.xpAwarded = true;
+    changed = true;
+  });
+
+  if (changed) {
+    try { localStorage.setItem(SCAN_KEY, JSON.stringify(scans)); } catch (_) {}
+    save(); render();
+  }
+}
+
+
+// ----------------------------------------------------------------
+//  17. KEYBOARD SHORTCUT & INITIALISATION
+// ----------------------------------------------------------------
+
+/** Close any open modal when Escape is pressed */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+/** Run on DOM ready */
+document.addEventListener('DOMContentLoaded', () => {
+  render();
+
+  // Show welcome modal if this is a first visit
+  if (!state.name) {
+    document.getElementById('modal-name').classList.add('open');
+    setTimeout(() => document.getElementById('input-name').focus(), 200);
+  } else {
+    closeModal('modal-name');
+  }
+
+  // Resume pending reward modal if the page was reloaded mid-claim
+  if (state.pendingReward) setTimeout(openRewardModal, 700);
+
+  // Process any teacher approvals that happened while offline
+  applyTeacherApprovals();
+
+  // Listen for real-time storage changes from the teacher portal
+  window.addEventListener('storage', e => {
+    if (e.key === SCAN_KEY) { applyTeacherApprovals(); render(); }
+    if (e.key === 'ql_teacher_tasks_v2') render();
+  });
+
+  // Profile modal — camera icon hover & touch behaviour
+  const previewWrap   = document.getElementById('profile-preview-wrap');
+  const cameraOverlay = document.getElementById('profile-cam-overlay');
+  if (previewWrap && cameraOverlay) {
+    previewWrap.addEventListener('mouseenter', () => cameraOverlay.style.opacity = '1');
+    previewWrap.addEventListener('mouseleave', () => cameraOverlay.style.opacity = '0');
+    previewWrap.addEventListener('touchstart',  () => cameraOverlay.style.opacity = '1', { passive: true });
+    previewWrap.addEventListener('touchend',    () => setTimeout(() => cameraOverlay.style.opacity = '0', 600), { passive: true });
+  }
+});
+</script>
+</body>
+</html>
