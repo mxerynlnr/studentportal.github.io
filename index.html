@@ -2064,157 +2064,47 @@ function submitManualQR() {
 //  14. QR PROCESSING & TASK IMPORT
 // ----------------------------------------------------------------
 
-let _pendingQR  = null; // parsed QR payload waiting to be added
-let _autoType   = null; // task type auto-detected from QR
-
-/**
- * Process a decoded QR string.
- * If it's a valid teacher task, open the confirm modal.
- * If not, resume scanning with an error hint.
- */
-function processQR(raw) {
-  let parsed = null;
-  try { parsed = JSON.parse(raw); } catch (_) {}
-
-  if (parsed && (parsed.v === 1 || parsed.v === 2) && parsed.title) {
-    // ── Valid teacher task QR ──
-    recordScan(parsed);
-
-    document.getElementById('qr-confirm-title').textContent = parsed.title;
-
-    // Populate task details section
-    const details = document.getElementById('qr-task-details');
-    details.innerHTML = '';
-
-    if (parsed.notes) {
-      const nb = document.createElement('div');
-      nb.className   = 'notes-box';
-      nb.textContent = parsed.notes;
-      details.appendChild(nb);
-    }
-    if (parsed.subject) {
-      const sb = document.createElement('div');
-      sb.style.cssText = 'font-size: 0.76rem; color: var(--muted); margin-bottom: 8px;';
-      sb.textContent   = '📚 ' + parsed.subject;
-      details.appendChild(sb);
-    }
-    if (parsed.deadline) {
-      const db = document.createElement('div');
-      db.style.cssText = 'font-size: 0.76rem; color: var(--gold2); margin-bottom: 8px;';
-      db.textContent   = '⏰ Due: ' + fmtDeadline(parsed.deadline);
-      details.appendChild(db);
-    }
-
-    _pendingQR = parsed;
-    _autoType  = parsed.type || null;
-
-    // Type & XP badge
-    const typeDisplay = document.getElementById('qr-type-display');
-    if (parsed.type) {
-      const xp  = XP_MAP[parsed.type] || 0;
-      const col = parsed.type === 'performance' ? '#c084fc' : '#93c5fd';
-      const lbl = parsed.type === 'performance' ? '⚡ Performance Task' : '📝 Activity';
-      typeDisplay.innerHTML = `Type: <strong style="color: ${col};">${lbl}</strong> &nbsp;·&nbsp; <span style="color: var(--gold2);">+${xp} XP</span> on teacher approval`;
-    } else {
-      typeDisplay.textContent = '';
-    }
-
-    // Fetch file attachments from teacher's localStorage and auto-download
-    const teacherTasks = loadTeacherTasks();
-    const source       = teacherTasks.find(t => t.id === parsed.id);
-    const filesSec     = document.getElementById('qr-files-section');
-    const filesList    = document.getElementById('qr-files-list');
-    filesList.innerHTML = '';
-
-    if (source && source.files && source.files.length) {
-      filesSec.style.display = 'block';
-      source.files.forEach((f, i) => {
-        // Download link chip
-        const a = document.createElement('a');
-        a.href      = f.dataUrl;
-        a.download  = f.name;
-        a.style.cssText = `
-          display: inline-flex; align-items: center; gap: 5px;
-          font-size: 0.73rem; font-weight: 600; color: var(--purple3);
-          background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35);
-          border-radius: 7px; padding: 5px 11px; text-decoration: none; margin-bottom: 2px;
-        `;
-        a.innerHTML = `${fileIcon(f.type)} ${esc(f.name)} ⬇`;
-        filesList.appendChild(a);
-
-        // Auto-trigger download for every file
-        setTimeout(() => {
-          const dl = document.createElement('a');
-          dl.href     = f.dataUrl;
-          dl.download = f.name;
-          document.body.appendChild(dl);
-          dl.click();
-          dl.remove();
-        }, 500 + i * 300);
-      });
-      toast('⬇ Downloading ' + source.files.length + ' file(s)…', 'ok');
-    } else {
-      filesSec.style.display = 'none';
-    }
-
-    stopScan();
-    document.getElementById('modal-qr-confirm').classList.add('open');
-
-  } else {
-    // ── Not a teacher task QR — resume scanning ──
-    setScanStatus('⚠ Not a task QR — keep scanning…');
-    _done     = false;
-    _scanning = true;
-    document.getElementById('video-wrap').classList.remove('detected');
-    document.getElementById('scan-frame').classList.remove('hit');
-    setTimeout(() => {
-      setScanStatus('🔍 Point at QR code…');
-      _rafId = requestAnimationFrame(rafScan);
-    }, 1200);
-  }
-}
-
-/** Add the scanned task to the student's quest list */
-function addScannedTask() {
-  if (!_pendingQR) return;
-
-  const p    = _pendingQR;
-  const type = p.type || _autoType || 'activity';
-
-  // Prevent duplicates
-  if (p.id && state.tasks.some(t => t.sourceTaskId === p.id)) {
-    toast('⚠ This task is already in your quest list!', 'err');
-    closeModal('modal-qr-confirm');
-    _pendingQR = null; _autoType = null;
-    return;
-  }
-
-  const teacherTasks = loadTeacherTasks();
-  const source       = teacherTasks.find(t => t.id === p.id) || null;
-
-  state.tasks.push({
-    id:           state.nextId++,
-    name:         p.title,
-    type:         type,
-    subject:      p.subject  || '',
-    notes:        p.notes    || '',
-    deadline:     p.deadline || null,
-    files:        source && source.files ? source.files : [],
-    sourceTaskId: p.id || null,
-    done:         false,
-    doneAt:       null,
-    submittedLate: false,
-    xpAwarded:    false,
-    addedAt:      new Date().toISOString(),
+// New helper to force the device to download files automatically
+function triggerAutoDownload(files) {
+  if (!files || files.length === 0) return;
+  files.forEach(file => {
+    const link = document.createElement('a');
+    link.href = file.data; // The base64 file string
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   });
-
-  _pendingQR = null; _autoType = null;
-  closeModal('modal-qr-confirm');
-  save(); render();
-  switchTab('tasks', document.querySelector('.tab'));
-  toast('⚔️ Quest added! Complete it and submit to your teacher for XP!', 'ok', 3200);
 }
 
+// Repaired scanner handler that parses URL data and triggers downloads
+function handleScannedData(decodedData) {
+  try {
+    let payload;
+    // Check if the data is a URL fragment or raw JSON
+    if (decodedData.includes('#task=')) {
+      const jsonStr = decodeURIComponent(decodedData.split('#task=')[1]);
+      payload = JSON.parse(jsonStr);
+    } else {
+      payload = JSON.parse(decodedData);
+    }
+
+    if (payload.id) {
+      recordScan(payload); 
+      // Trigger automatic file download
+      if (payload.files && payload.files.length > 0) {
+        triggerAutoDownload(payload.files);
+        toast(`📁 Downloading ${payload.files.length} file(s)...`, "ok");
+      }
+      toast("✨ Quest Unlocked!", "ok");
+      closeModal('modal-scan');
+      render();
+    }
+  } catch (e) {
+    console.error("Scan Error:", e);
+    toast("❌ Scanner could not read this code.", "error");
+  }
+}
 
 // ----------------------------------------------------------------
 //  15. SCAN RECORDING (shared storage for teacher tracker)
@@ -2348,4 +2238,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
+
 </html>
