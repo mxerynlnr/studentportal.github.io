@@ -671,102 +671,102 @@ body::before {
 /* ----------------------------------------------------------------
    15. QR SCANNER
    ---------------------------------------------------------------- */
-/* ════════════════════════════════════════════
-   REPAIRED SCANNER & AUTO-DOWNLOAD ENGINE
-════════════════════════════════════════════ */
-
-// 1. Helper to force the device to download files automatically
-function triggerAutoDownload(files) {
-  if (!files || files.length === 0) return;
-  files.forEach(file => {
-    const link = document.createElement('a');
-    link.href = file.data; 
-    link.download = file.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+.qr-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
 }
 
-// 2. The data processing engine
-function processTaskData(data) {
-  try {
-    let payload;
-    // Check if it's a URL link or raw JSON
-    if (data.includes('#task=')) {
-      const jsonStr = decodeURIComponent(data.split('#task=')[1]);
-      payload = JSON.parse(jsonStr);
-    } else {
-      payload = JSON.parse(data);
-    }
-
-    if (payload.id) {
-      recordScan(payload); 
-      // Trigger automatic file download instantly
-      if (payload.files && payload.files.length > 0) {
-        triggerAutoDownload(payload.files);
-        toast(`📁 Downloading ${payload.files.length} file(s)...`, "ok");
-      }
-      toast("✨ Quest Unlocked!", "ok");
-      closeModal('modal-scan');
-      render();
-    }
-  } catch (e) {
-    console.error("Scan Error:", e);
-    toast("❌ Scanner could not read this code.", "error");
-  }
+.qr-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--purple2), transparent);
 }
 
-// 3. Updated Scanner Functions
-function startScanner() {
-  const video = document.getElementById('qr-video');
-  const canvasElement = document.getElementById('qr-canvas');
-  const canvas = canvasElement.getContext('2d', { willReadFrequently: true });
-
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-    state.scannerActive = true;
-    video.srcObject = stream;
-    video.setAttribute("playsinline", true);
-    video.play();
-    document.getElementById('video-wrap').style.display = 'block';
-
-    // This is the loop that replaces your missing "tick" function
-    const loop = () => {
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvasElement.height = video.videoHeight;
-        canvasElement.width = video.videoWidth;
-        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-        const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
-        
-        if (code) {
-          processTaskData(code.data); // Use the new engine
-          stopScanner();
-          return;
-        }
-      }
-      if (state.scannerActive) requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-  });
+.info-banner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(109, 40, 217, 0.10);
+  border: 1px solid rgba(109, 40, 217, 0.28);
+  border-radius: var(--r-sm);
+  padding: 11px 14px;
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.55;
+  margin-bottom: 18px;
 }
 
-function stopScanner() {
-  state.scannerActive = false;
-  const video = document.getElementById('qr-video');
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(track => track.stop());
-  }
-  document.getElementById('video-wrap').style.display = 'none';
+#video-wrap {
+  display: none;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #000;
+  position: relative;
+  margin-top: 14px;
+  border: 2px solid var(--border2);
+  transition: border-color 0.3s;
 }
 
-// 4. Initializer for QR Links
-window.addEventListener('load', () => {
-  if (window.location.hash.includes('#task=')) {
-    processTaskData(window.location.href);
-    window.history.replaceState(null, null, ' '); 
-  }
-});
+#video-wrap.detected { border-color: var(--green); animation: detectFlash 0.5s ease; }
+
+@keyframes detectFlash {
+  0%   { box-shadow: 0 0 0 0px  rgba(16, 185, 129, 0.8); }
+  70%  { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+  100% { box-shadow: none; }
+}
+
+#qr-video  { width: 100%; display: block; }
+#qr-canvas { display: none; }
+
+.scan-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+
+.scan-frame {
+  width: 220px; height: 220px;
+  border: 2px solid var(--purple2);
+  border-radius: 16px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  position: relative;
+  transition: border-color 0.3s;
+}
+.scan-frame.hit { border-color: var(--green); }
+
+/* Corner brackets */
+.corner { position: absolute; width: 24px; height: 24px; border-color: var(--purple3); border-style: solid; transition: border-color 0.3s; }
+.scan-frame.hit .corner { border-color: var(--green); }
+.tl { top: -2px;    left: -2px;   border-width: 3px 0 0 3px; border-radius: 5px 0 0 0; }
+.tr { top: -2px;    right: -2px;  border-width: 3px 3px 0 0; border-radius: 0 5px 0 0; }
+.bl { bottom: -2px; left: -2px;   border-width: 0 0 3px 3px; border-radius: 0 0 0 5px; }
+.br { bottom: -2px; right: -2px;  border-width: 0 3px 3px 0; border-radius: 0 0 5px 0; }
+
+.scan-beam {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--purple3), transparent);
+  animation: scanBeam 1.8s ease-in-out infinite;
+}
+@keyframes scanBeam { 0%, 100% { top: 4%; } 50% { top: 93%; } }
+
+.scan-status { text-align: center; font-size: 0.78rem; color: var(--muted); padding: 8px 0 0; font-weight: 600; letter-spacing: 0.03em; }
+
+/* Hidden — auto-process replaces two-step confirm flow */
+.qr-result { display: none !important; }
+
+.xp-legend { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.xp-legend h4 { font-weight: 700; font-size: 0.8rem; color: var(--text2); margin-bottom: 10px; }
+.xp-legend-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+
+.xp-tag { font-size: 0.73rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; }
+.xp-tag.performance { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
+.xp-tag.activity    { background: rgba( 96, 165, 250, 0.18); color: #93c5fd; }
+.xp-val { font-size: 0.8rem; font-weight: 800; color: var(--gold2); }
+
 
 /* ----------------------------------------------------------------
    16. REWARDS PANEL
